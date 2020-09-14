@@ -41,6 +41,7 @@
 <script>
 import { email, required, minLength } from 'vuelidate/lib/validators'
 import {toastMessages, toastStyles} from '@/utils/toast-info'
+import {mapActions} from 'vuex'
 
 export default {
   data: () => ({
@@ -64,6 +65,7 @@ export default {
     if(toastMessages[this.$route.query.message]) this.$addToast(toastMessages[this.$route.query.message], toastStyles.success);
   },
   methods: {
+    ...mapActions('auth', ['login']),
     fieldRequiredValidation(field){
       return this.$v[field].$dirty && !this.$v[field].required;
     },
@@ -73,7 +75,7 @@ export default {
     fieldTemplateValidation(field, template = "email"){
       return this.$v[field].$dirty && !this.$v[field][template];
     },
-    submitHandler(){
+    async submitHandler(){
       if(this.$v.$invalid){
         this.$v.$touch();
         return
@@ -84,7 +86,14 @@ export default {
         password: this.password,
       }
 
-      this.$router.push("/");
+      try{
+        await this.login(formData);
+        this.$router.push("/");
+      }
+      catch(e){
+        this.$addToast(e.message, toastStyles.error);
+      }
+      
     }
   }
 }
