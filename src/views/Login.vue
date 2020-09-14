@@ -6,21 +6,21 @@
         <input id="email" 
                type="text" 
                class="validate" 
-               :class="{invalid: emailRequiredValidation || emailTemplateValidation}" 
+               :class="{invalid: fieldRequiredValidation('email') || fieldTemplateValidation('email')}" 
                v-model="email"/>
         <label for="email">Email</label>
-        <small v-if="emailRequiredValidation" class="helper-text invalid">Введите email</small>
-        <small v-else-if="emailTemplateValidation" class="helper-text invalid">Введите корректный email</small>
+        <small v-if="fieldRequiredValidation('email')" class="helper-text invalid">Введите email</small>
+        <small v-else-if="fieldTemplateValidation('email')" class="helper-text invalid">Введите корректный email</small>
       </div>
       <div class="input-field">
         <input id="password" 
                type="password" 
                class="validate" 
-               :class="{invalid: passwordRequiredValidation || passwordMinLengthValidation}"
+               :class="{invalid: fieldRequiredValidation('password') || fieldMinLengthValidation('password')}"
                v-model="password"/>
         <label for="password">Пароль</label>
-        <small v-if="passwordRequiredValidation" class="helper-text invalid">Введите пароль</small>
-        <small v-else-if="passwordMinLengthValidation" class="helper-text invalid">Пароль должен быть длиннее {{minLengthPassword}} символов</small>
+        <small v-if="fieldRequiredValidation('password')" class="helper-text invalid">Введите пароль</small>
+        <small v-else-if="fieldMinLengthValidation('password')" class="helper-text invalid">Пароль должен быть длиннее {{minLength}} символов</small>
       </div>
     </div>
     <div class="card-action">
@@ -40,27 +40,14 @@
 </template>
 <script>
 import { email, required, minLength } from 'vuelidate/lib/validators'
+import {toastMessages, toastStyles} from '@/utils/toast-info'
 
 export default {
   data: () => ({
     email: "",
     password: "",
-    minLengthPassword: 10,
+    minLength: 6,
   }),
-  computed: {
-    emailRequiredValidation(){
-      return this.$v.email.$dirty && !this.$v.email.required;
-    },
-    emailTemplateValidation(){
-      return this.$v.email.$dirty && !this.$v.email.email;
-    },
-    passwordRequiredValidation(){
-      return this.$v.password.$dirty && !this.$v.password.required;    
-    },
-    passwordMinLengthValidation(){
-      return this.$v.password.$dirty && !this.$v.password.minLength;
-    }
-  },
   validations(){
     return {
       email: {
@@ -68,12 +55,24 @@ export default {
         required
       },
       password:{
-        minLength: minLength(this.minLengthPassword),
+        minLength: minLength(this.minLength),
         required
       }
     }
   },
+  mounted(){
+    if(toastMessages[this.$route.query.message]) this.$addToast(toastMessages[this.$route.query.message], toastStyles.success);
+  },
   methods: {
+    fieldRequiredValidation(field){
+      return this.$v[field].$dirty && !this.$v[field].required;
+    },
+    fieldMinLengthValidation(field){
+      return this.$v[field].$dirty && !this.$v[field].minLength;
+    },
+    fieldTemplateValidation(field, template = "email"){
+      return this.$v[field].$dirty && !this.$v[field][template];
+    },
     submitHandler(){
       if(this.$v.$invalid){
         this.$v.$touch();

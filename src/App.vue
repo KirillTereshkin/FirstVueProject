@@ -24,4 +24,14 @@ export default {
 <style lang="scss">
 @import '~materialize-css/dist/css/materialize.css';
 @import "assets/index.css";
+
+.toast{
+  &_error{
+    background-color: #ee6e73;
+  }
+  &_success{
+    background-color: #26a69a;
+  }
+}
+
 </style>
