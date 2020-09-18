@@ -28,7 +28,7 @@
             </li>
             <li class="divider" tabindex="-1"></li>
             <li>
-              <a href="#" class="black-text" @click.prevent="logout">
+              <a href="#" class="black-text" @click.prevent="logoutHandler">
                 <i class="material-icons">assignment_return</i>Выйти
               </a>
             </li>
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 
 let intervalId;
 let dropdown;
@@ -49,7 +50,9 @@ export default {
     date: new Date()
   }),
   methods: {
-    logout(){
+    ...mapActions('auth', ['logout']),
+    async logoutHandler(){
+      await this.logout();
       this.$router.push("/login?message=logout");
     },    
   },

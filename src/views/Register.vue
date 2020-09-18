@@ -42,7 +42,8 @@
   </form>
 </template>
 <script>
-import { email, required, minLength } from 'vuelidate/lib/validators'
+import { email, required, minLength } from 'vuelidate/lib/validators';
+import { mapActions } from 'vuex';
 
 export default {
   data: ()=>({
@@ -61,6 +62,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('auth', ['register']),
     fieldRequiredValidation(field){
       return this.$v[field].$dirty && !this.$v[field].required;
     },
@@ -70,17 +72,24 @@ export default {
     fieldTemplateValidation(field, template = "email"){
       return this.$v[field].$dirty && !this.$v[field][template];
     },
-    submitHandler(){
-      
+    async submitHandler(){
       if(this.$v.$invalid){
         this.$v.$touch(); 
         return
       }
 
       const formData = {
+        email: this.email,
+        password: this.password,
+        name: this.name,
       };
 
-      this.$router.push("/");
+      try{
+        await this.register(formData);
+        this.$router.push("/");
+      }
+      catch(e){}
+  
     }
   }
 }

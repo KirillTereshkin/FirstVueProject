@@ -90,9 +90,7 @@ export default {
         await this.login(formData);
         this.$router.push("/");
       }
-      catch(e){
-        this.$addToast(e.message, toastStyles.error);
-      }
+      catch(e){}
       
     }
   }
