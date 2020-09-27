@@ -5,7 +5,7 @@
         <a href="#" @click.prevent="$emit('hide-navbar')">
           <i class="material-icons black-text">dehaze</i>
         </a>
-        <span class="black-text">{{ date | date('datetime') }}</span> 
+        <span class="black-text">{{ date | date("datetime") }}</span>
       </div>
 
       <ul class="right hide-on-small-and-down">
@@ -16,7 +16,7 @@
             data-target="dropdown"
             ref="dropdown"
           >
-            User Name
+            {{ userName }}
             <i class="material-icons right">arrow_drop_down</i>
           </a>
 
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from "vuex";
 
 let intervalId;
 let dropdown;
@@ -50,22 +50,29 @@ export default {
     date: new Date()
   }),
   methods: {
-    ...mapActions('auth', ['logout']),
-    async logoutHandler(){
+    ...mapActions(["logout"]),
+    async logoutHandler() {
       await this.logout();
       this.$router.push("/login?message=logout");
-    },    
+    }
   },
-  mounted(){
-    intervalId = setInterval(()=> { this.date = new Date() }, 1000);
+  computed: {
+    userName() {
+      return this.$store.getters.getUserInfo.name;
+    }
+  },
+  mounted() {
+    intervalId = setInterval(() => {
+      this.date = new Date();
+    }, 1000);
 
     dropdown = M.Dropdown.init(this.$refs.dropdown, {
       constraintWidth: true
-    })
+    });
   },
-  beforeDestroy(){
+  beforeDestroy() {
     clearInterval(intervalId);
-    if( dropdown && dropdown.destroy ) dropdown.destroy();
+    if (dropdown && dropdown.destroy) dropdown.destroy();
   }
-}
+};
 </script>

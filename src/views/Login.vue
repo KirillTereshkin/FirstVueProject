@@ -65,7 +65,7 @@ export default {
     if(toastMessages[this.$route.query.message]) this.$addToast(toastMessages[this.$route.query.message], toastStyles.success);
   },
   methods: {
-    ...mapActions('auth', ['login']),
+    ...mapActions(['login']),
     fieldRequiredValidation(field){
       return this.$v[field].$dirty && !this.$v[field].required;
     },

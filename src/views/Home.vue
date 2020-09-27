@@ -5,52 +5,49 @@
         <div class="page-title">
           <h3>Счет</h3>
 
-          <button class="btn waves-effect waves-light btn-small">
+          <button
+            class="btn waves-effect waves-light btn-small"
+            @click="refresh"
+          >
             <i class="material-icons">refresh</i>
           </button>
         </div>
 
-        <div class="row">
-          <div class="col s12 m6 l4">
-            <div class="card light-blue bill-card">
-              <div class="card-content white-text">
-                <span class="card-title">Счет в валюте</span>
+        <Loader ref="LoaderRef" v-if="!currency" />
+        <div v-else class="row">
+          <HomeBillCard :currency="currency.rates" />
 
-                <p class="currency-line">
-                  <span>12.0 Р</span>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col s12 m6 l8">
-            <div class="card orange darken-3 bill-card">
-              <div class="card-content white-text">
-                <div class="card-header">
-                  <span class="card-title">Курс валют</span>
-                </div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Валюта</th>
-                      <th>Курс</th>
-                      <th>Дата</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    <tr>
-                      <td>руб</td>
-                      <td>12121</td>
-                      <td>12.12.12</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          <HomeCurrencyCard :currency="currency.rates" :date="currency.date" />
         </div>
       </div>
     </div>
   </main>
 </template>
+<script>
+import HomeBillCard from "@/components/HomeBillCard";
+import HomeCurrencyCard from "@/components/HomeCurrencyCard";
+import { toastStyles } from "@/utils/toast-info";
+
+export default {
+  name: "home",
+  data: () => ({
+    currency: null,
+    totalBill: null
+  }),
+  components: {
+    HomeBillCard,
+    HomeCurrencyCard
+  },
+  mounted() {
+    this.refresh();
+  },
+  methods: {
+    refresh() {
+      this.currency = null;
+      this.$store
+        .dispatch("fetchCurrency")
+        .then(r => (this.currency = this.$store.getters.currency));
+    }
+  }
+};
+</script>

@@ -62,7 +62,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('auth', ['register']),
+    ...mapActions(['register']),
     fieldRequiredValidation(field){
       return this.$v[field].$dirty && !this.$v[field].required;
     },
