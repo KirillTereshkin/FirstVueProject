@@ -15,7 +15,7 @@
           />
           <label for="name">Название</label>
           <span class="helper-text invalid" v-if="isCategoryNameValid()"
-            >Введите название</span
+            >Введите название категории</span
           >
         </div>
 
@@ -82,13 +82,13 @@ export default {
           name: this.categoryName,
           limit: this.categoryLimit
         });
-        this.categoryName = "";
-        this.categoryLimit = 0;
-        this.$v.$reset();
-        this.$addToast(toastMessages.categoryCreated, toastStyles.success);
-
-        this.$emit('addCreatedCategory', category)
-      } catch (e) {}
+      } catch (e) {
+        return;
+      }
+      this.categoryName = "";
+      this.categoryLimit = 0;
+      this.$v.$reset();
+      this.$addToast(toastMessages.categoryCreated, toastStyles.success);
     }
   }
 };
