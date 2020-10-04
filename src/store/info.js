@@ -26,6 +26,18 @@ export default {
       } catch (e) {
         commit("setError", e);
       }
+    },
+    async updateUserInfo({ dispatch, commit }, userInfo) {
+      try {
+        const userId = await dispatch("getUserId");
+        await firebase
+          .database()
+          .ref(`/users/${userId}/info`)
+          .update({ ...userInfo });
+        commit("setUserInfo", { ...userInfo });
+      } catch (e) {
+        commit("setError", e);
+      }
     }
   },
   getters: {
