@@ -10,7 +10,7 @@
       </div>
     </main>
 
-    <div class="fixed-action-btn">
+    <div class="fixed-action-btn" v-tooltip="{html: 'Добавить новую запись', position: 'top'}">
       <router-link class="btn-floating btn-large blue" to="/records">
         <i class="large material-icons">add</i>
       </router-link>
@@ -28,22 +28,23 @@ export default {
   name: "main-layout",
   data: () => ({
     isSideBarOpen: true,
-    isFetchingFinished: false
+    isFetchingFinished: false,
   }),
   components: {
     Navbar,
     Sidebar,
-    Loader
+    Loader,
   },
   async mounted() {
     try {
       if (!Object.keys(this.$store.getters.getUserInfo).length) {
         await this.$store.dispatch("fetchUerInfo");
+        await this.$store.dispatch("fetchCategories");
         this.isFetchingFinished = true;
       }
     } catch (e) {
       this.$addToast(toastMessages.unknownError, toastStyles.error);
     }
-  }
+  },
 };
 </script>
