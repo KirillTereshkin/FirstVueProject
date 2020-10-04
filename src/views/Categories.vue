@@ -20,23 +20,18 @@ import Loader from "@/components/app/CSSLoader";
 
 export default {
   name: "categories",
-  data() {
-    return {
-      isLoaded: null,
-    };
-  },
   computed: {
     isUpdateCardAvailiable(){
       return Object.keys(this.$store.getters.getCategories).length;
+    },
+    isLoaded(){
+      return this.$store.getters.getCategoriesLoadingStatus;
     }
   },
   components: {
     CategoriesFormCreate,
-    CategoriesFormChange
+    CategoriesFormChange,
+    Loader
   },
-  async mounted() {
-    await this.$store.dispatch("getCategories");
-    this.isLoaded = this.$store.getters.getCategoriesLoadingStatus;
-  }
 };
 </script>

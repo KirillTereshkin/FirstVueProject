@@ -12,8 +12,9 @@
               v-for="categoryKey in Object.keys(categories)"
               :key="categoryKey"
               :value="categoryKey"
-              >{{ categories[categoryKey].name }}</option
             >
+              {{ categories[categoryKey].name }}
+            </option>
           </select>
         </div>
 
@@ -43,9 +44,19 @@
           >
         </div>
 
-        <button class="btn waves-effect waves-light" type="submit">
+        <button
+          class="btn waves-effect waves-light button button_send"
+          type="submit"
+        >
           Обновить
           <i class="material-icons right">send</i>
+        </button>
+        <button
+          class="btn waves-effect waves-light button"
+          @click.prevent="deleteCategory"
+        >
+          Удалить запись
+          <i class="material-icons right">delete</i>
         </button>
       </form>
     </div>
@@ -63,30 +74,30 @@ export default {
       selectedCategoryName: undefined,
       selectedCategoryLimit: undefined,
       selectPlugin: null,
-      categoryLimitMinValue: 0
+      categoryLimitMinValue: 0,
     };
   },
   computed: {
-    categories(){
+    categories() {
       return this.$store.getters.getCategories;
-    }
+    },
   },
   validations() {
     return {
       selectedCategoryName: {
-        required
+        required,
       },
       selectedCategoryLimit: {
         required,
-        minValue: minValue(this.categoryLimitMinValue)
-      }
+        minValue: minValue(this.categoryLimitMinValue),
+      },
     };
   },
   watch: {
     selectedCategoryKey(val) {
       this.selectedCategoryName = this.categories[val].name;
       this.selectedCategoryLimit = this.categories[val].limit;
-    }
+    },
   },
   methods: {
     async submitHandler() {
@@ -99,9 +110,9 @@ export default {
         await this.$store.dispatch("updateCategory", {
           id: this.selectedCategoryKey,
           limit: this.selectedCategoryLimit,
-          name: this.selectedCategoryName
+          name: this.selectedCategoryName,
         });
-        this.$addToast('Категория успешно создана', toastStyles.success);
+        this.$addToast("Категория успешно обновлена", toastStyles.success);
         this.$forceUpdate();
       } catch (e) {}
     },
@@ -117,10 +128,15 @@ export default {
         !this.$v.selectedCategoryLimit.minValue
       );
     },
-    updateSelect(){
+    updateSelect() {
       this.selectPlugin = M.FormSelect.init(this.$refs.selectRef);
       M.updateTextFields();
-    }
+    },
+    async deleteCategory() {
+      try {
+        this.$store.dispatch("deleteCategory", this.selectedCategoryKey);
+      } catch (e) {}
+    },
   },
   created() {
     this.selectedCategoryKey = Object.keys(this.categories)[0];
@@ -134,6 +150,14 @@ export default {
   destroyed() {
     if (this.selectPlugin && this.selectPlugin.destroy)
       this.selectPlugin.destroy();
-  }
+  },
 };
 </script>
+<style lang="scss" scoped>
+.button {
+  margin-top: 10px;
+  &_send {
+    margin-right: 15px;
+  }
+}
+</style>
