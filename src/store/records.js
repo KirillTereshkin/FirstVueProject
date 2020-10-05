@@ -20,6 +20,7 @@ export default {
 
     async fetchRecords({ dispatch, commit }) {
       try {
+        commit("setRecordsLoadingStatus", false);
         const userId = await dispatch("getUserId");
         const records = (
           await firebase
@@ -40,6 +41,9 @@ export default {
         state.records = { ...state.records, ...records };
         state.isRecordsLoaded = true;
       }
+    },
+    setRecordsLoadingStatus(state, status) {
+      state.isRecordsLoaded = status;
     }
   },
   getters: {

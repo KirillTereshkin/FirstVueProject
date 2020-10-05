@@ -26,6 +26,7 @@ export default {
 
     async fetchCategories({ commit, dispatch }) {
       try {
+        commit("setCategoriesLoadingStatus", false);
         const userId = await dispatch("getUserId");
         const categories = (
           await firebase
@@ -68,7 +69,7 @@ export default {
           .ref(`/users/${userId}/categories`)
           .child(categoryId)
           .remove();
-        commit('deleteCategory', categoryId);
+        commit("deleteCategory", categoryId);
       } catch (e) {
         dispatch("setError", e);
       }
@@ -82,10 +83,10 @@ export default {
     setCategoriesLoadingStatus(state, status) {
       state.isCategoriesLoaded = status;
     },
-    deleteCategory(state, categoryId){
-      const {categories} = state;
+    deleteCategory(state, categoryId) {
+      const { categories } = state;
       delete categories[categoryId];
-      state.categories = {...categories};
+      state.categories = { ...categories };
     }
   },
 

@@ -35,6 +35,19 @@ export default {
     Sidebar,
     Loader,
   },
+  computed: {
+    error() {
+      return this.$store.getters.error;
+    },
+  },
+  watch: {
+    error(fbError) {
+      this.$addToast(
+        toastMessages[fbError.code] || "Ошибка",
+        toastStyles.error
+      );
+    },
+  },
   async mounted() {
     try {
       if (!Object.keys(this.$store.getters.getUserInfo).length) {

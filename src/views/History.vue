@@ -10,38 +10,35 @@
           <canvas></canvas>
         </div>
 
-        <section>
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Сумма</th>
-                <th>Дата</th>
-                <th>Категория</th>
-                <th>Тип</th>
-                <th>Открыть</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>1212</td>
-                <td>12.12.32</td>
-                <td>name</td>
-                <td>
-                  <span class="white-text badge red">Расход</span>
-                </td>
-                <td>
-                  <button class="btn-small btn">
-                    <i class="material-icons">open_in_new</i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
+        <Loader v-if="getRecordsLoadingStatus" />
+        <p v-else-if="!Object.keys($store.getters.getRecords).length">
+          Записей пока нет,
+          <router-link to="/records">добавить запись</router-link>
+        </p>
+        <HistoryTable v-else/>
       </div>
     </div>
   </main>
 </template>
+<script>
+import HistoryTable from "@/components/HistoryTable";
+import Loader from "@/components/app/CSSLoader";
+
+export default {
+  name: "history",
+  components: {
+    HistoryTable,
+    Loader,
+  },
+  computed: {
+    getRecordsLoadingStatus() {
+      return this.$store.getRecordsLoadingStatus;
+    },
+  },
+  async mounted() {
+    try {
+      await this.$store.dispatch("fetchRecords");
+    } catch (e) {}
+  },
+};
+</script>

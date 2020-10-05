@@ -17,7 +17,7 @@
           v-for="cat in Object.entries(categories)"
           :key="cat[0]"
           :style="{ cursor: 'pointer' }"
-          v-tooltip="{html: cat[1].text}"
+          v-tooltip="{ html: cat[1].text }"
         >
           <div>
             <p>
@@ -79,7 +79,10 @@ export default {
         ([key, val]) => {
           if (!newCategories[key]) {
             const sum = Object.values(this.$store.getters.getRecords).reduce(
-              (prevVal, item) => prevVal + (item.id === key ? item.sum : 0),
+              (prevVal, item) =>
+                prevVal +
+                (item.id === key ? item.sum : 0) *
+                  (item.type === "income" ? -1 : 1),
               0
             );
             const percentage = (sum / val.limit) * 100;
@@ -97,10 +100,11 @@ export default {
                 : "Доступно: " +
                   this.$options.filters.currency(
                     (Math.abs(percentage - 100) / 100) * val.limit
-                  ) + `, использовано ${percentage.toFixed(0)}%`;
+                  ) +
+                  `, использовано ${percentage.toFixed(0)}%`;
             newCategories[key] = {
               name: val.name,
-                limit: val.limit,
+              limit: val.limit,
               sum,
               percentage,
               color,
