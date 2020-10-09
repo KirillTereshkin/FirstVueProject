@@ -33,7 +33,7 @@
           </td>
           <td v-tooltip="{ html: 'Детальное описание', position: 'top' }">
             <router-link
-              :to="`/detail-record?id=${rec[0]}`"
+              :to="`/detail-record/${rec[0]}`"
               class="btn-small btn"
             >
               <i class="material-icons">open_in_new</i>

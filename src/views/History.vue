@@ -10,7 +10,7 @@
           <canvas></canvas>
         </div>
 
-        <Loader v-if="getRecordsLoadingStatus" />
+        <Loader v-if="!isLoaded" />
         <p v-else-if="!Object.keys($store.getters.getRecords).length">
           Записей пока нет,
           <router-link to="/records">добавить запись</router-link>
@@ -26,18 +26,17 @@ import Loader from "@/components/app/CSSLoader";
 
 export default {
   name: "history",
+  data: () => ({
+    isLoaded: false,
+  }),
   components: {
     HistoryTable,
     Loader,
   },
-  computed: {
-    getRecordsLoadingStatus() {
-      return this.$store.getRecordsLoadingStatus;
-    },
-  },
   async mounted() {
     try {
       await this.$store.dispatch("fetchRecords");
+      this.isLoaded = true;
     } catch (e) {}
   },
 };

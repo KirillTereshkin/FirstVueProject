@@ -10,7 +10,10 @@
       </div>
     </main>
 
-    <div class="fixed-action-btn" v-tooltip="{html: 'Добавить новую запись', position: 'top'}">
+    <div
+      class="fixed-action-btn"
+      v-tooltip="{ html: 'Добавить новую запись', position: 'top' }"
+    >
       <router-link class="btn-floating btn-large blue" to="/records">
         <i class="large material-icons">add</i>
       </router-link>
@@ -53,6 +56,7 @@ export default {
       if (!Object.keys(this.$store.getters.getUserInfo).length) {
         await this.$store.dispatch("fetchUerInfo");
         await this.$store.dispatch("fetchCategories");
+        await this.$store.dispatch("fetchRecords");
         this.isFetchingFinished = true;
       }
     } catch (e) {

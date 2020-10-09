@@ -146,7 +146,7 @@ export default {
         await this.$store.dispatch("uploadRecord", {
           id: this.selectedCategoryId,
           sum: this.selectedCategorySum,
-          desciption: this.selectedCategoryDescription,
+          description: this.selectedCategoryDescription,
           date: new Date().toJSON(),
           type: this.selectedCategoryFinanceDirection,
         });
@@ -161,6 +161,7 @@ export default {
         this.$v.$reset();
         this.selectedCategorySum = 0;
         this.selectedCategoryDescription = "";
+        this.selectedCategoryFinanceDirection = "outcome";
       } catch (e) {}
     },
     isSumValid() {
