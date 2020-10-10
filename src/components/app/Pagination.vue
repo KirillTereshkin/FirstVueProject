@@ -3,14 +3,14 @@
     <li
       class="waves-effect"
       :class="{ disabled: page === 1 }"
-      @click="page !== 1 && $emit('change-page', page - 1)"
+      @click="page !== 1 && changePage(page - 1)"
     >
       <a href="#!"><i class="material-icons">chevron_left</i></a>
     </li>
     <li
       v-for="index in pagesNumber"
       :key="index"
-      @click="$emit('change-page', index)"
+      @click="changePage(index)"
       class="waves-effect"
       :class="{ active: page === index }"
     >
@@ -20,7 +20,7 @@
     <li
       class="waves-effect"
       :class="{ disabled: page === pagesNumber }"
-      @click="page !== pagesNumber && $emit('change-page', page + 1)"
+      @click="page !== pagesNumber && changePage(page + 1)"
     >
       <a href="#!"><i class="material-icons">chevron_right</i></a>
     </li>
@@ -37,6 +37,10 @@ export default {
     },
     pagesNumber: {
       type: Number,
+      required: true,
+    },
+    changePage: {
+      type: Function,
       required: true,
     },
   },

@@ -13,14 +13,8 @@
       </thead>
 
       <tbody>
-        <tr
-          v-for="(rec, index) in Object.entries(records).slice(
-            (page - 1) * maxRecordsOnPage,
-            page * maxRecordsOnPage
-          )"
-          :key="rec[0]"
-        >
-          <td>{{ (page - 1) * maxRecordsOnPage + index + 1 }}</td>
+        <tr v-for="(rec, index) in items" :key="rec[0]">
+          <td>{{ pageSize * (currentPage - 1) + index + 1 }}</td>
           <td>{{ rec[1].sum | currency }}</td>
           <td>{{ rec[1].date | date }}</td>
           <td>{{ getCategoryName(rec[1].id) }}</td>
@@ -32,10 +26,7 @@
             >
           </td>
           <td v-tooltip="{ html: 'Детальное описание', position: 'top' }">
-            <router-link
-              :to="`/detail-record/${rec[0]}`"
-              class="btn-small btn"
-            >
+            <router-link :to="`/detail-record/${rec[0]}`" class="btn-small btn">
               <i class="material-icons">open_in_new</i>
             </router-link>
           </td>
@@ -43,39 +34,35 @@
       </tbody>
     </table>
     <Pagination
-      :page="page"
-      :pages-number="getPagesNumber"
-      @change-page="page = $event"
+      :page="currentPage"
+      :pagesNumber="pageCount"
+      :changePage="changePage"
     />
   </section>
 </template>
 
 <script>
 import Pagination from "@/components/app/Pagination";
+import paginationMixin from "@/mixins/pagination.mixin";
 
 export default {
   name: "history-table",
+  mixins: [paginationMixin],
   data() {
     return {
-      page: 1,
-      maxRecordsOnPage: 5,
       records: this.$store.getters.getRecords,
     };
   },
   components: {
     Pagination,
   },
-  computed: {
-    getPagesNumber() {
-      return Math.ceil(
-        Object.keys(this.records).length / this.maxRecordsOnPage
-      );
-    },
-  },
   methods: {
     getCategoryName(id) {
       return this.$store.getters.getCategories[id].name || "Без категории";
     },
+  },
+  mounted() {
+    this.setUpPagination(Object.entries(this.$store.getters.getRecords), 3);
   },
 };
 </script>
